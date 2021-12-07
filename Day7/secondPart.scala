@@ -12,12 +12,18 @@ def getTotalMovePrice(spawns: List[Long], destination: Long): Long = {
   movePrice
 }
 
-def getMinimumMovePrice(spawns: List[Long]): Long = {
-  (0L until spawns(spawns.size - 1)).foldLeft(10000000000L)((acc, destination) =>
-      math.min(acc, getTotalMovePrice(spawns, destination)))
+def binarySearchMovePrice(spawns: List[Long], low: Long, high: Long): Long = {
+  if (low == high)
+    return getTotalMovePrice(spawns, low)
+  val midPoint = ((low + high)/2).toLong
+  val midPointValue = getTotalMovePrice(spawns, midPoint)
+  if (getTotalMovePrice(spawns, midPoint - 1) < midPointValue)
+    binarySearchMovePrice(spawns, low, midPoint)
+  else
+    math.min(midPointValue, binarySearchMovePrice(spawns, midPoint + 1, high))
 }
 
 val filename = "input.txt"
 val spawns = Source.fromFile(filename).getLines.toList(0).split(",").toList.map(_.toLong).sorted
 println(spawns)
-println(getMinimumMovePrice(spawns))
+println(binarySearchMovePrice(spawns, spawns(0), spawns(spawns.size - 1)))
