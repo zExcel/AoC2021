@@ -9,7 +9,7 @@ import util.control.Breaks._
 val openers = Set('(', '[', '{', '<')
 val closingMap = Map('(' -> ')', '[' -> ']', '{' -> '}', '<' -> '>')
 val chunkPairs = Map(')' -> '(', ']' -> '[', '}' -> '{', '>' -> '<')
-val charValues = Map('(' -> 1, '[' -> 2, '{' -> 3, '<' -> 4)
+val charValues = Map('(' -> 1L, '[' -> 2L, '{' -> 3L, '<' -> 4L)
 
 def findIncompleteChunk(chunk: String, stack: String): String = {
   if (chunk.size == 0)
@@ -25,19 +25,14 @@ def findIncompleteChunk(chunk: String, stack: String): String = {
   }
 }
 
-def findIncompleteValue(line: String): Int = {
-  println(findIncompleteChunk(line, ""))
-  findIncompleteChunk(line, "").foldLeft(0)((acc, char) => 
+def findIncompleteValue(line: String): Long = {
+  findIncompleteChunk(line, "").foldLeft(0L)((acc, char) => 
       5  * acc + charValues(char))
 }
 
 val filename = "input.txt"
 val lines = Source.fromFile(filename).getLines.toList
 
-val lineValues = lines.map(line => findIncompleteValue(line)).filter(_ > 0).sorted
+val lineValues = lines.map(line => findIncompleteValue(line)).filter(_ > 0L).sorted
 
-println(lineValues)
-
-
-println(lineValues.size)
 println(lineValues(lineValues.size / 2))
