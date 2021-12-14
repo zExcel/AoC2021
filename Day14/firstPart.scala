@@ -11,21 +11,6 @@ def progressString(mappings: Map[String, String], currentString: String): String
   }) + currentString(currentString.size - 1).toString
 }
 
-def getCounts(string: String): Map[String, Long] = {
-  val pairMap = (for (i <- 0 until string.size - 1) yield i).foldLeft(Map[String, Long]())((map, index) => {
-    val pair = string(index).toString + string(index + 1).toString
-    map + (pair -> (map.getOrElse(pair, 0L) + 1L))
-  })
-  pairMap
-}
-
-def getCharCounts(string: String): Map[Char, Long] = {
-  val counts = (for (i <- 'A' to 'Z') yield i).foldLeft(Map[Char,Long]())((map, char) => {
-    map + (char -> string.count(_ == char))
-  }).filter(_._2 > 0)
-  counts
-}
-
 val filename = "input.txt"
 val lines = Source.fromFile(filename).getLines.toList
 val starting = lines.head
