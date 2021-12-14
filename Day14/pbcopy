@@ -1,0 +1,7 @@
+def getCounts(string: String): Map[String, Long] = {
+  val pairMap = (for (i <- 0 until string.size - 1) yield i).foldLeft(Map[String, Long]())((map, index) => {
+    val pair = string(index).toString + string(index + 1).toString
+    map + (pair -> (map.getOrElse(pair, 0L) + 1L))
+  })
+  pairMap
+}
