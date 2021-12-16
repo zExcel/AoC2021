@@ -108,9 +108,12 @@ val hex = Source.fromFile(filename).getLines.toList(0)
 val bin = convertHexToBinary(hex)
 
 
+val t0 = System.nanoTime
 val partTwoAnswer = parsePacket(bin)._1
+val t1 = System.nanoTime
 
 println(s"Part one answer: $versionSum")
 
 println(s"Part two answer: $partTwoAnswer")
 
+println("Took " + ((t1 - t0) / 1e6d) + "ms")
