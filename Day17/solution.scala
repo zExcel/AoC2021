@@ -7,13 +7,13 @@ import util.control.Breaks._
 
 
 def rangeContainsPoint(xRange: (Int, Int), yRange: (Int, Int), point: (Int, Int)): Boolean = 
-  (xRange._1 to xRange._2).contains(point._1) && (yRange._1 to yRange._2).contains(point._2)
+  (xRange._1 <= point._1 && point._1 <= xRange._2 && yRange._1 <= point._2  && point._2 <= yRange._2)
 
 def findNewVelocity(velocity: (Int, Int)): (Int, Int) =  
-  ((if (velocity._1 < 0) velocity._1 + 1 else if (velocity._1 > 0) velocity._1 - 1 else 0), velocity._2 - 1)
+  (velocity._1 - velocity._1.signum, velocity._2 - 1)
 
 def findElevationOfVelocity(xRange: (Int, Int), yRange: (Int, Int), velocity: (Int, Int)): Int = {
-  (1 to 300).foldLeft((0, (0, 0), velocity))((info, iter) => {
+  (1 to velocity._2 + math.abs(yRange._2) * 2).foldLeft((0, (0, 0), velocity))((info, iter) => {
     val highest = info._1
     val pos = info._2
     val vel = info._3
@@ -30,7 +30,9 @@ def findElevationOfVelocity(xRange: (Int, Int), yRange: (Int, Int), velocity: (I
 }
 
 def findHighestElevationPoint(xRange: (Int, Int), yRange: (Int, Int)): (Int, Int) = {
-  val highestElevMappings = (0 to xRange._2).map(x => (yRange._1 to 135).map(y => {
+  val lowX = -1 * math.max(math.abs(xRange._1), math.abs(xRange._2))
+  val lowY = -1 * math.max(math.abs(yRange._1), math.abs(yRange._2))
+  val highestElevMappings = (lowX to -1 * lowX).map(x => (lowY to -1 * lowY).map(y => {
     val highestElev = findElevationOfVelocity(xRange, yRange, (x, y))
     highestElev
   }))
@@ -49,8 +51,6 @@ val yRangeList = line.substring(line.indexOf("y") + 2).split("[..]").toList.filt
 
 val xRange = (xRangeList(0), xRangeList(1))
 val yRange  = (yRangeList(0), yRangeList(1))
-
-println(xRange + " " + yRange)
 
 val answer = findHighestElevationPoint(xRange, yRange)
 println(answer)
